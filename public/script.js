@@ -119,6 +119,7 @@ function generate_table(loadedJSON){
     var add_weight = document.createElement("td");
     var add_date = document.createElement("td");
     var add_unit = document.createElement("td");
+    var add_update = document.createElement("td");
     var add_delete = document.createElement("td");
 
     /*loaded JSON on client console:
@@ -128,18 +129,24 @@ function generate_table(loadedJSON){
       //https://stackoverflow.com/questions/31275357/using-substring-of-json-key-value-for-conditionals
       //https://www.w3schools.com/jsref/jsref_substring.asp
       //https://piazza.com/class/jbu2ol8jlbl3iu?cid=285
+
+      /* DATE */
       add_date.innerText = item["date"].substring(0); //because item["date"] is string
       add_row.appendChild(add_date);
 
+      /* EXERCISE (NAME) */
       add_name.innerText = item["name"].substring(0);  //because item["name"] is string
       add_row.appendChild(add_name);
 
+      /* REPS */
       add_reps.innerText = item["reps"];  //because item["reps"] not string
       add_row.appendChild(add_reps);
 
+      /* WEIGHT */
       add_weight.innerText = item["weight"];
       add_row.appendChild(add_weight);
 
+      /* UNIT (LBS)*/
       if(item["lbs"] === 1){  // if(document.getElementById("add_lbs_false").checked){
         add_unit.innerText = "lbs";
       }
@@ -148,11 +155,55 @@ function generate_table(loadedJSON){
       }
       add_row.appendChild(add_unit);
 
+      /* UPDATE BUTTON */
+      var form = document.createElement("form");
+      var input = document.createElement("input");
+        input.setAttribute('type', "hidden");
+        input.setAttribute('value', item["id"]);
+      var button = document.createElement("input");
+        button.setAttribute('type', "button");
+        button.setAttribute('value', "UPDATE");
+        button.setAttribute('class', "update");
+
+      form.appendChild(input);
+      form.appendChild(button);
+      add_update.appendChild(form);
+      add_row.appendChild(add_update);
+
+      /* DELETE BUTTON*/
+      var form = document.createElement("form");
+      var input = document.createElement("input");
+        input.setAttribute('type', "hidden");
+        input.setAttribute('value', item["id"]);
+      var button = document.createElement("input");
+        button.setAttribute('type', "button");
+        button.setAttribute('value', "DELETE");
+        button.setAttribute('class', "delete");
+
+      form.appendChild(input);
+      form.appendChild(button);
+      add_delete.appendChild(form);
+      add_row.appendChild(add_delete);
+
       //NEED TO APPEND!!
       table.appendChild(add_row);
   })
-}
 
+
+  /* EVENT LISTENER - UPDATE BUTTONS */
+  var button_update = document.getElementsByClassName("update");
+  //Go through however many update buttons we have
+  for (var i = 0; i < button_update.length; i++ ){
+    button_update[i].addEventListener('click', updateFunction, false);
+  }
+
+  /* EVENT LISTENER - DELETE BUTTONS */
+  var button_delete = document.getElementsByClassName("delete");
+  //Go through however many delete buttons we have
+  for (var i = 0; i < button_delete.length; i++ ){
+    button_delete[i].addEventListener('click', deleteFunction, false);
+  }
+}
 
 /*****************************************************************************
 2. INSERT
@@ -205,49 +256,9 @@ addButton.addEventListener('click', function(event){  //I don't think I need an 
      if(ourRequest.status >= 200 && ourRequest.status < 400){
        var addedData = JSON.parse(ourRequest.responseText);
        //Dynamically create a table to display the loaded addedData
-       // generate_table(addedData);
-        var table = document.getElementById("displayTable");
-        addedData.forEach(function(item){
-         //Create new row/cells to put the loaded JSON in
-         var add_row = document.createElement("tr");
+       generate_table(addedData);
 
-         var add_name = document.createElement("td");
-         var add_reps = document.createElement("td");
-         var add_weight = document.createElement("td");
-         var add_date = document.createElement("td");
-         var add_unit = document.createElement("td");
-         var add_delete = document.createElement("td");
 
-         /*loaded JSON on client console:
-             0:{id: 2, name: "jog", reps: 0, weight: 0, date: "0000-00-00", …}
-             1:{id: 3, name: "run", reps: 0, weight: 0, date: "0000-00-00", …}
-             2:{id: 4, name: "swim", reps: 0, weight: 0, date: "0000-00-00", …} */
-           //https://stackoverflow.com/questions/31275357/using-substring-of-json-key-value-for-conditionals
-           //https://www.w3schools.com/jsref/jsref_substring.asp
-           //https://piazza.com/class/jbu2ol8jlbl3iu?cid=285
-           add_date.innerText = item["date"].substring(0); //because item["date"] is string
-           add_row.appendChild(add_date);
-
-           add_name.innerText = item["name"].substring(0);  //because item["name"] is string
-           add_row.appendChild(add_name);
-
-           add_reps.innerText = item["reps"];  //because item["reps"] not string
-           add_row.appendChild(add_reps);
-
-           add_weight.innerText = item["weight"];
-           add_row.appendChild(add_weight);
-
-           if(item["lbs"] === 1){  // if(document.getElementById("add_lbs_false").checked){
-             add_unit.innerText = "lbs";
-           }
-           else if (item["lbs"] === 0){   //(document.getElementById("add_lbs_true").checked) {  //else, default: lbs is true
-             add_unit.innerText = "kg";
-           }
-           add_row.appendChild(add_unit);
-
-           //NEED TO APPEND!!
-           table.appendChild(add_row);
-       })
      }
     //B. If data fails to load from the server, print error message.
      else {
