@@ -269,26 +269,27 @@ addButton.addEventListener('click', function(event){  //I don't think I need an 
 /*****************************************************************************
 3. DELETE
 *****************************************************************************/
-function deleteFunction(table, row_id){
-    console.log("deleteFunction row_id: " + row_id);
+function deleteFunction(event){
+  // console.log("id is: " + this.value);
+  console.log("hidden_id is:" + this.previousSibling.value);
+  var hidden_id = this.previousSibling.value;
+  var payload = {"id": hidden_id};
+
     var deleteRequest = new XMLHttpRequest();
-    var id = row_id;
-    var payload = {"id": id};
     deleteRequest.open('POST', '/delete', true);
     deleteRequest.setRequestHeader("Content-Type", "application/json");
     deleteRequest.onload = function(){
       if(deleteRequest.status >= 200 && deleteRequest.status < 400){
-        var deleteData = JSON.parse(deleteRequest.responseText); //Parse the loaded JSON data
-        console.log(deleteData); //Display the objects to client console
-        //Dynamically create a table to display the loaded ourData (f'n definition below)
-        // generate_table(deleteData);
-      }
-      //B. If data fails to load from the server, print error message.
-      else{
-        console.log("Error in network request: " + deleteData.statusText);
+        var deleteData = JSON.parse(deleteRequest.responseText);
+        generate_table(deleteData);
+      } else {
+        console.log("Error in network request: " + deleteData.statusText)
       }
     }
     deleteRequest.send(JSON.stringify(payload));
+    event.preventDefault();
+  
+  
 
 }
 
