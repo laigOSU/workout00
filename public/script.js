@@ -128,9 +128,7 @@ function generate_table(loadedJSON){
       //https://stackoverflow.com/questions/31275357/using-substring-of-json-key-value-for-conditionals
       //https://www.w3schools.com/jsref/jsref_substring.asp
       //https://piazza.com/class/jbu2ol8jlbl3iu?cid=285
-      if (item["date"] != null){
-        add_date.innerText = item["date"].substring(0); //because item["date"] is string
-      }
+      add_date.innerText = item["date"].substring(0); //because item["date"] is string
       add_row.appendChild(add_date);
 
       add_name.innerText = item["name"].substring(0);  //because item["name"] is string
@@ -145,7 +143,7 @@ function generate_table(loadedJSON){
       if(document.getElementById("add_lbs_false").checked){
         add_unit.innerText = "kg";
       }
-      else if (document.getElementById("add_lbs_true").checked){
+      else if (document.getElementById("add_lbs_true").checked) {  //else, default: lbs is true
         add_unit.innerText = "lbs";
       }
       add_row.appendChild(add_unit);
@@ -198,12 +196,11 @@ addButton.addEventListener('click', function(event){  //I don't think I need an 
   document.getElementById("add_date").value = null;
 
   if (document.getElementById("add_lbs_false").checked){
-    payload.lbs = false;
+    payload.lbs = 0;
   }
   else if (document.getElementById("add_lbs_true").checked){
-    payload.lbs = true;
+    payload.lbs = 1;
   }
-  document.getElementById("add_unit").value = null;
 
   //I might need to setRequestHeader
   addReq.open('POST', '/insert', true);
@@ -228,12 +225,6 @@ addButton.addEventListener('click', function(event){  //I don't think I need an 
   // addReq.send(payload);
   event.preventDefault();
 });
-
-
-
-
-
-
 
 /*****************************************************************************
 3. DELETE
