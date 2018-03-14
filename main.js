@@ -88,10 +88,53 @@ app.post('/insert',function(req, res){
 /*****************************************************************************
   DELETE
 *****************************************************************************/
+app.post('/delete', function(req, res){
+  console.log("This is /delete.  I got a POST request to DELETE");
+  var context = {};
+  mysql.pool.query("DELETE FROM workouts WHERE id = ?", [req.body.id], function(err, result){
+    if(err){
+      next(err);
+      return;
+    }
+
+    mysql.pool.query('SELECT * FROM workouts', function(err, rows, fields){
+        if (err){
+          next(err);
+          return;
+        }
+        context.results = JSON.stringify(result);
+        console.log("What I got from /delete: ", context);
+        res.type('application/json');
+        res.send(rows);
+    });
+  });
+});
+
 
 /*****************************************************************************
   UPDATE
 *****************************************************************************/
+app.post('/update',function(req,res,next){
+  pool.query('UPDATE workouts SET name=?, date=?, reps=?, weight=?, lbs=? WHERE id = ?',
+  [req.body.name, req.body.date, req.body.reps, req.body.weight, req.body.unit, req.body.id],
+  function(err, result){
+    if(err){
+      next(err);
+      return;
+    }
+    mysql.pool.query('SELECT * FROM workouts', function(err, rows, fields){
+        if (err){
+          next(err);
+          return;
+        }
+        context.results = JSON.stringify(result);
+        console.log("What I got from /update: ", context);
+        res.type('application/json');
+        res.send(rows);
+    });
+  });
+});
+
 
 
 /*****************************************************************************
