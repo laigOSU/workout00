@@ -1,0 +1,24 @@
+<!-- CREATE A WEBSITE WITH A SUBMIT BUTTON-->
+<h1>WORKOUT TRACKER - HOME PAGE</h1>
+
+<!-- INSERT-->
+<h3>ADD WORKOUT HERE</h3>
+<form id="addWorkoutForm">  <!--action="/#" Don't need bc script.js will redirect the button-->
+
+    First name:
+      <br><input id="fname"  type="text" name="fname" ><br>
+    Last name:
+      <br><input id="lname" type="text" name="lname" ><br>
+    <!--later, change this to house.name, and then sql will convert accordingly-->
+    House id:
+      <br><input id="house" type="number" name="house"><br><br>
+    <!-- LUMOS BUTTON IN SCRIPT.JS <input type="submit" id="home01Submit" value="Submit"> -->
+</form>
+
+
+<!-- DISPLAY (automatically on load, via DOM in script.js)-->
+<h3>CURRENT WORKOUTS</h3>
+<table id="displayTable">
+  <!-- script.js does DOM here-->
+
+</table>
