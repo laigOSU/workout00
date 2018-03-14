@@ -173,27 +173,20 @@ addButton.addEventListener('click', function(event){  //I don't think I need an 
                 date: null,
                 lbs: null};
 
-    console.log(typeof name);
-    console.log(typeof reps);
-    console.log(typeof weight);
-    console.log(typeof date);
-    console.log(typeof lbs);
-    console.log("Client going to try sending to server")
-
   //Now set the object elements to client input (addWorkoutForm form parameters)
   //OR leave it null, whichever is true
   //and then reset the previous value in the form
-  payload.name = document.getElementById("add_name").value || null;
-   document.getElementById("add_name").value = null;
+  payload.name = document.getElementById("add_name").value;// || null;
+   // document.getElementById("add_name").value = null;
 
-  payload.reps = document.getElementById("add_reps").value || null;
-  document.getElementById("add_reps").value = null;
+  payload.reps = document.getElementById("add_reps").value;// || null;
+  // document.getElementById("add_reps").value = null;
 
-  payload.weight = document.getElementById("add_weight").value || null;
-  document.getElementById("add_weight").value = null;
+  payload.weight = document.getElementById("add_weight").value;// || null;
+  // document.getElementById("add_weight").value = null;
 
-  payload.date = document.getElementById("add_date").value || null;
-  document.getElementById("add_date").value = null;
+  payload.date = document.getElementById("add_date").value;// || null;
+  // document.getElementById("add_date").value = null;
 
   if (document.getElementById("add_lbs_false").checked){
     payload.lbs = 0;
@@ -219,7 +212,7 @@ addButton.addEventListener('click', function(event){  //I don't think I need an 
        console.log("Error in network request: " + ourRequest.statusText);
      }
      // addReq.send(JSON.stringify(payload));
-  }
+  };
 
   //req.send() here
   addReq.send(JSON.stringify(payload));
