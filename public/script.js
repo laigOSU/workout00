@@ -205,7 +205,49 @@ addButton.addEventListener('click', function(event){  //I don't think I need an 
      if(ourRequest.status >= 200 && ourRequest.status < 400){
        var addedData = JSON.parse(ourRequest.responseText);
        //Dynamically create a table to display the loaded addedData
-       generate_table(addedData);
+       // generate_table(addedData);
+        var table = document.getElementById("displayTable");
+        addedData.forEach(function(item){
+         //Create new row/cells to put the loaded JSON in
+         var add_row = document.createElement("tr");
+
+         var add_name = document.createElement("td");
+         var add_reps = document.createElement("td");
+         var add_weight = document.createElement("td");
+         var add_date = document.createElement("td");
+         var add_unit = document.createElement("td");
+         var add_delete = document.createElement("td");
+
+         /*loaded JSON on client console:
+             0:{id: 2, name: "jog", reps: 0, weight: 0, date: "0000-00-00", …}
+             1:{id: 3, name: "run", reps: 0, weight: 0, date: "0000-00-00", …}
+             2:{id: 4, name: "swim", reps: 0, weight: 0, date: "0000-00-00", …} */
+           //https://stackoverflow.com/questions/31275357/using-substring-of-json-key-value-for-conditionals
+           //https://www.w3schools.com/jsref/jsref_substring.asp
+           //https://piazza.com/class/jbu2ol8jlbl3iu?cid=285
+           add_date.innerText = item["date"].substring(0); //because item["date"] is string
+           add_row.appendChild(add_date);
+
+           add_name.innerText = item["name"].substring(0);  //because item["name"] is string
+           add_row.appendChild(add_name);
+
+           add_reps.innerText = item["reps"];  //because item["reps"] not string
+           add_row.appendChild(add_reps);
+
+           add_weight.innerText = item["weight"];
+           add_row.appendChild(add_weight);
+
+           if(item["lbs"] === 1){  // if(document.getElementById("add_lbs_false").checked){
+             add_unit.innerText = "lbs";
+           }
+           else if (item["lbs"] === 0){   //(document.getElementById("add_lbs_true").checked) {  //else, default: lbs is true
+             add_unit.innerText = "kg";
+           }
+           add_row.appendChild(add_unit);
+
+           //NEED TO APPEND!!
+           table.appendChild(add_row);
+       })
      }
     //B. If data fails to load from the server, print error message.
      else {
