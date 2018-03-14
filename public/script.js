@@ -157,31 +157,35 @@ function generate_table(loadedJSON){
 
       /* UPDATE BUTTON */
       var form = document.createElement("form");
-      var input = document.createElement("input");
-        input.setAttribute('type', "hidden");
-        input.setAttribute('value', item["id"]);
-      var button = document.createElement("input");
-        button.setAttribute('type', "button");
-        button.setAttribute('value', "UPDATE");
-        button.setAttribute('class', "update");
+      var input_update = document.createElement("input");
+        input_update.setAttribute('type', "hidden");
+        input_update.setAttribute('value', item["id"]);
+      var button_update = document.createElement("input");
+        button_update.setAttribute('type', "button");
+        button_update.setAttribute('value', "UPDATE");
+        button_update.setAttribute('class', "update");
+      // var updateBUTTON = document.getElementById("update");
+      //   updateBUTTON.addEventListener('click', updateFunction(displayTable, item["id"]), false);
 
-      form.appendChild(input);
-      form.appendChild(button);
+      form.appendChild(input_update);
+      form.appendChild(button_update);
       add_update.appendChild(form);
       add_row.appendChild(add_update);
 
       /* DELETE BUTTON*/
       var form = document.createElement("form");
-      var input = document.createElement("input");
-        input.setAttribute('type', "hidden");
-        input.setAttribute('value', item["id"]);
-      var button = document.createElement("input");
-        button.setAttribute('type', "button");
-        button.setAttribute('value', "DELETE");
-        button.setAttribute('class', "delete");
+      var input_delete = document.createElement("input");
+        input_delete.setAttribute('type', "hidden");
+        input_delete.setAttribute('value', item["id"]);
+      var button_delete = document.createElement("input");
+        button_delete.setAttribute('type', "button");
+        button_delete.setAttribute('value', "DELETE");
+        button_delete.setAttribute('class', "delete");
+      // var deleteBUTTON = document.getElementById("delete");
+      //   deleteBUTTON.addEventListener('click', deleteFunction(displayTable, item["id"]), false);
 
-      form.appendChild(input);
-      form.appendChild(button);
+      form.appendChild(input_delete);
+      form.appendChild(button_delete);
       add_delete.appendChild(form);
       add_row.appendChild(add_delete);
 
@@ -189,19 +193,18 @@ function generate_table(loadedJSON){
       table.appendChild(add_row);
   })
 
-
   /* EVENT LISTENER - UPDATE BUTTONS */
   var button_update = document.getElementsByClassName("update");
   //Go through however many update buttons we have
   for (var i = 0; i < button_update.length; i++ ){
-    button_update[i].addEventListener('click', updateFunction, false);
+  button_update[i].addEventListener('click', updateFunction, false);
   }
 
   /* EVENT LISTENER - DELETE BUTTONS */
   var button_delete = document.getElementsByClassName("delete");
   //Go through however many delete buttons we have
   for (var i = 0; i < button_delete.length; i++ ){
-    button_delete[i].addEventListener('click', deleteFunction, false);
+  button_delete[i].addEventListener('click', deleteFunction, false);
   }
 }
 
@@ -225,19 +228,10 @@ addButton.addEventListener('click', function(event){  //I don't think I need an 
                 lbs: null};
 
   //Now set the object elements to client input (addWorkoutForm form parameters)
-  //OR leave it null, whichever is true
-  //and then reset the previous value in the form
-  payload.name = document.getElementById("add_name").value;// || null;
-   // document.getElementById("add_name").value = null;
-
-  payload.reps = document.getElementById("add_reps").value;// || null;
-  // document.getElementById("add_reps").value = null;
-
-  payload.weight = document.getElementById("add_weight").value;// || null;
-  // document.getElementById("add_weight").value = null;
-
-  payload.date = document.getElementById("add_date").value;// || null;
-  // document.getElementById("add_date").value = null;
+  payload.name = document.getElementById("add_name").value;
+  payload.reps = document.getElementById("add_reps").value;
+  payload.weight = document.getElementById("add_weight").value;
+  payload.date = document.getElementById("add_date").value;
 
   if (document.getElementById("add_lbs_false").checked){
     payload.lbs = 0;
@@ -245,7 +239,6 @@ addButton.addEventListener('click', function(event){  //I don't think I need an 
   else if (document.getElementById("add_lbs_true").checked){
     payload.lbs = 1;
   }
-
 
   //I might need to setRequestHeader
   addReq.open('POST', '/insert', true);
@@ -276,12 +269,35 @@ addButton.addEventListener('click', function(event){  //I don't think I need an 
 /*****************************************************************************
 3. DELETE
 *****************************************************************************/
+function deleteFunction(table, row_id){
+    console.log("deleteFunction row_id: " + row_id);
+    var deleteRequest = new XMLHttpRequest();
+    var id = row_id;
+    var payload = {"id": id};
+    deleteRequest.open('POST', '/delete', true);
+    deleteRequest.setRequestHeader("Content-Type", "application/json");
+    deleteRequest.onload = function(){
+      if(deleteRequest.status >= 200 && deleteRequest.status < 400){
+        var deleteData = JSON.parse(deleteRequest.responseText); //Parse the loaded JSON data
+        console.log(deleteData); //Display the objects to client console
+        //Dynamically create a table to display the loaded ourData (f'n definition below)
+        // generate_table(deleteData);
+      }
+      //B. If data fails to load from the server, print error message.
+      else{
+        console.log("Error in network request: " + deleteData.statusText);
+      }
+    }
+    deleteRequest.send(JSON.stringify(payload));
 
+}
 
 /*****************************************************************************
 4. UPDATE
 *****************************************************************************/
-
+function updateFunction(table, row_id){
+  console.log("updateFunction row_id: " + row_id);
+}
 
 
 
