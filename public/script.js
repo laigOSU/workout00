@@ -140,11 +140,11 @@ function generate_table(loadedJSON){
       add_weight.innerText = item["weight"];
       add_row.appendChild(add_weight);
 
-      if(document.getElementById("add_lbs_false").checked){
-        add_unit.innerText = "kg";
-      }
-      else if (document.getElementById("add_lbs_true").checked) {  //else, default: lbs is true
+      if(item["lbs"] === 1){  // if(document.getElementById("add_lbs_false").checked){
         add_unit.innerText = "lbs";
+      }
+      else if (item["lbs"] === 0){   //(document.getElementById("add_lbs_true").checked) {  //else, default: lbs is true
+        add_unit.innerText = "kg";
       }
       add_row.appendChild(add_unit);
 
@@ -201,6 +201,7 @@ addButton.addEventListener('click', function(event){  //I don't think I need an 
   else if (document.getElementById("add_lbs_true").checked){
     payload.lbs = 1;
   }
+
 
   //I might need to setRequestHeader
   addReq.open('POST', '/insert', true);
