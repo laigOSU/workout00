@@ -122,24 +122,34 @@ function generate_table(loadedJSON){
     var add_delete = document.createElement("td");
 
     /*loaded JSON on client console:
-      0: {id: 2, fname: "Harry", lname: "Potter", house: 9}
-      1: {id: 2, fname: "Ron", lname: "Weasley", house: 9}  */
+        0:{id: 2, name: "jog", reps: 0, weight: 0, date: "0000-00-00", …}
+        1:{id: 3, name: "run", reps: 0, weight: 0, date: "0000-00-00", …}
+        2:{id: 4, name: "swim", reps: 0, weight: 0, date: "0000-00-00", …} */
       //https://stackoverflow.com/questions/31275357/using-substring-of-json-key-value-for-conditionals
       //https://www.w3schools.com/jsref/jsref_substring.asp
 
-    // if (item["fname"] != null){
-      // add_fname.innerText = item["fname"].substring(0);   //}  curly from if statemetn
-      // add_row.appendChild(add_fname);
-      //
-      // add_lname.innerText = item["lname"].substring(0);
-      // add_row.appendChild(add_lname);
-      //
-      // //becuase item["house"] is not a substring
-      // add_house.innerText = item["house"];
-      // add_row.appendChild(add_house);
-      //
-      // //NEED TO APPEND!!
-      // table.appendChild(add_row);
+      add_name.innerText = item["name"].substring(0);  //because item["name"] string
+      add_row.appendChild(add_name);
+
+      add_reps.innerText = item["reps"];  //because item["reps"] not string
+      add_row.appendChild(add_reps);
+
+      add_weight.innerText = item["weight"];
+      add_row.appendChild(add_weight);
+
+      add_date.innerText = item["date"].substring(0); //because string
+      add_row.appendChild(add_date);
+
+      if(document.getElementById("add_lbs_false").checked){
+        add_unit.innerText = "kg";
+      }
+      else {  //else, default: lbs is true
+        add_unit.innerText = "lbs";
+      }
+      add_row.appendChild(add_unit);
+
+      //NEED TO APPEND!!
+      table.appendChild(add_row);
   })
 }
 
