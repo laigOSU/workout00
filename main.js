@@ -3,9 +3,13 @@
 *****************************************************************************/
 var express = require('express');
 var mysql = require('./dbcon.js');
+var bodyParser = require('body-parser');  //NEED THIS FOR THE POST!!!!!
 
 var app = express();
 var handlebars = require('express-handlebars').create({defaultLayout:'main'});
+
+app.use(bodyParser.urlencoded({extended:false}));
+app.use(bodyParser.json());
 
 app.engine('handlebars', handlebars.engine);
 app.set('view engine', 'handlebars');
@@ -29,22 +33,21 @@ app.get('/',function(req,res){
 /*****************************************************************************
   DISPLAY
 *****************************************************************************/
-app.get('/display',function(req,res){   //was home1
+app.get('/display',function(req,res){
   console.log("This is /display. I got a GET request");
   var context = {};
   mysql.pool.query('SELECT * FROM workouts', function(err, rows, fields){
-  // var queryResult = mysql.pool.query('SELECT * FROM Students', function(err, rows, fields){
     if(err){
       next(err);
       return;
     }
     context.results = JSON.stringify(rows);
-    console.log("Still from /display",context); //good, consoles the JSON object of students
-    //  Now send this data (that we had console.log'd) via res.send() instead of console.log
+    console.log("Still from /display",context);
 
     res.type('application/json')
-    res.send(rows); //ORIGINAL
+    res.send(rows);
   })
+  console.log("finished display");
 });
 
 /*****************************************************************************
@@ -53,20 +56,31 @@ app.get('/display',function(req,res){   //was home1
 app.post('/insert',function(req, res){
   console.log("this is /insert. I got a POST request to ADD.");
   var context = {};
-  mysql.pool.query('INSERT INTO Students (`fname`, `lname`, `house`) VALUES (?,?,?)',
-    [req.body.fname, req.body.lname, req.body.house], function(err, result){
+  mysql.pool.query('INSERT INTO workouts (`name`, `reps`, `weight`, `date`, `lbs`) VALUES (?,?,?,?,?)',
+    [req.body.name, req.body.reps, req.body.weight, req.body.date, req.body.lbs], function(err, result){
       if(err){
         next(err);
         return;
       }
 
-      context.results = JSON.stringify(result);
-      console.log("What I got from /insert: ",context);
-      res.type('application/json');
-      res.send(rows);
-    }
-)
-})
+    // mysql.pool.query('SELECT * FROM workouts', function(err, rows, fields){
+    //     if (err){
+    //       next(err);
+    //       return;
+    //     }
+    //     console.log("What I got from /insert: ", context);
+    //     res.type('application/json');
+    //     res.send(rows);
+    // });
+
+    context.results = JSON.stringify(result);
+    console.log("What I got from /insert: ",context);
+    res.type('application/json');
+    res.send(result);
+
+  });
+});
+
 
 
 
@@ -84,7 +98,7 @@ app.post('/insert',function(req, res){
 *****************************************************************************/
 app.get('/reset-table',function(req,res,next){
   var context = {};
-  [your connection pool].query("DROP TABLE IF EXISTS workouts", function(err){ //replace your connection pool with the your variable containing the connection pool
+  mysql.pool.query("DROP TABLE IF EXISTS workouts", function(err){ //replace your connection pool with the your variable containing the connection pool
     var createString = "CREATE TABLE workouts("+
     "id INT PRIMARY KEY AUTO_INCREMENT,"+
     "name VARCHAR(255) NOT NULL,"+
@@ -92,7 +106,7 @@ app.get('/reset-table',function(req,res,next){
     "weight INT,"+
     "date DATE,"+
     "lbs BOOLEAN)";
-    [your connection pool].query(createString, function(err){
+    mysql.pool.query(createString, function(err){
       context.results = "Table reset";
       res.render('home',context);
     })
