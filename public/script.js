@@ -127,8 +127,11 @@ function generate_table(loadedJSON){
         2:{id: 4, name: "swim", reps: 0, weight: 0, date: "0000-00-00", …} */
       //https://stackoverflow.com/questions/31275357/using-substring-of-json-key-value-for-conditionals
       //https://www.w3schools.com/jsref/jsref_substring.asp
+      //https://piazza.com/class/jbu2ol8jlbl3iu?cid=285
+      add_date.innerText = item["date"].substring(0, 10); //because item["date"] is string
+      add_row.appendChild(add_date);
 
-      add_name.innerText = item["name"].substring(0);  //because item["name"] string
+      add_name.innerText = item["name"].substring(0);  //because item["name"] is string
       add_row.appendChild(add_name);
 
       add_reps.innerText = item["reps"];  //because item["reps"] not string
@@ -136,9 +139,6 @@ function generate_table(loadedJSON){
 
       add_weight.innerText = item["weight"];
       add_row.appendChild(add_weight);
-
-      add_date.innerText = item["date"].substring(0); //because string
-      add_row.appendChild(add_date);
 
       if(document.getElementById("add_lbs_false").checked){
         add_unit.innerText = "kg";
@@ -157,61 +157,74 @@ function generate_table(loadedJSON){
 /*****************************************************************************
 2. INSERT
 *****************************************************************************/
-// var addButton = document.getElementById("addButton");
-//
-// addButton.addEventListener('click', function(event){  //I don't think I need an event parameter. Anyway.
-//   console.log("I'm going to work on sending these post parameters to server");
-//
-//   var addReq = new XMLHttpRequest();
-//
-//   //https://www.w3schools.com/js/js_json_arrays.asp
-//   // {id: 2, fname: "Harry", lname: "Potter", house: 9}
-//   //Create the payload object and set all elements to null
-//   var payload = {fname: null,
-//                 lname: null,
-//                 house: null};
-//
-//     console.log(typeof fname);
-//     console.log(typeof lname);
-//     console.log(typeof house);
-//     console.log("HP client going to try sending to HP server")
-//
-//   //Now set the object elements to client input (addWorkoutForm form parameters)
-//   //OR leave it null, whichever is true
-//   //and then reset the previous value in the form
-//   payload.fname = document.getElementById("fname").value || null;
-//    document.getElementById("fname").value = null;
-//
-//   payload.lname = document.getElementById("lname").value || null;
-//   document.getElementById("lname").value = null;
-//
-//   payload.house = document.getElementById("house").value || null;
-//   document.getElementById("house").value = null;
-//
-//
-//   //I might need to setRequestHeader
-//   addReq.open('POST', '/insert', true);
-//   addReq.setRequestHeader('Content-Type', 'application/json');
-//
-//   addReq.onload = function(){
-//      //A. If the data from server loads properly, then do something with it.
-//      if(ourRequest.status >= 200 && ourRequest.status < 400){
-//        var addedData = JSON.parse(ourRequest.responseText);
-//        //Dynamically create a table to display the loaded addedData
-//        generate_table(addedData);
-//      }
-//     //B. If data fails to load from the server, print error message.
-//      else {
-//        console.log("Error in network request: " + ourRequest.statusText);
-//      }
-//      // addReq.send(JSON.stringify(payload));
-//   }
-//
-//   //req.send() here
-//   //addReq.send(JSON.stringify(payload));
-//   addReq.send(payload);
-//   event.preventDefault();
-// });
+var addButton = document.getElementById("addButton");
+
+addButton.addEventListener('click', function(event){  //I don't think I need an event parameter. Anyway.
+  console.log("I'm going to work on sending these post parameters to server");
+
+  var addReq = new XMLHttpRequest();
+
+  //https://www.w3schools.com/js/js_json_arrays.asp
+  // 0:{id: 2, name: "jog", reps: 0, weight: 0, date: "0000-00-00", …}
+  //Create the payload object and set all elements to null
+  var payload = {name: null,
+                reps: null,
+                weight: null,
+                date: null,
+                lbs: null};
+
+    console.log(typeof name);
+    console.log(typeof reps);
+    console.log(typeof weight);
+    console.log(typeof date);
+    console.log(typeof lbs);
+    console.log("Client going to try sending to server")
+
+  //Now set the object elements to client input (addWorkoutForm form parameters)
+  //OR leave it null, whichever is true
+  //and then reset the previous value in the form
+  payload.name = document.getElementById("add_name").value || null;
+   document.getElementById("add_name").value = null;
+
+  payload.reps = document.getElementById("add_reps").value || null;
+  document.getElementById("add_reps").value = null;
+
+  payload.weight = document.getElementById("add_weight").value || null;
+  document.getElementById("add_weight").value = null;
+
+  payload.date = document.getElementById("add_date").value || null;
+  document.getElementById("add_date").value = null;
+
+  if (document.getElementById("add_lbs_false").checked){
+    payload.lbs = 0;
+  }
+  else{
+    payload.lbs = 1;
+  }
+
+  //I might need to setRequestHeader
+  addReq.open('POST', '/insert', true);
+  addReq.setRequestHeader('Content-Type', 'application/json');
+
+  addReq.onload = function(){
+     //A. If the data from server loads properly, then do something with it.
+     if(ourRequest.status >= 200 && ourRequest.status < 400){
+       var addedData = JSON.parse(ourRequest.responseText);
+       //Dynamically create a table to display the loaded addedData
+       generate_table(addedData);
+     }
+    //B. If data fails to load from the server, print error message.
+     else {
+       console.log("Error in network request: " + ourRequest.statusText);
+     }
+     // addReq.send(JSON.stringify(payload));
+  }
+
+  //req.send() here
+  addReq.send(JSON.stringify(payload));
+  // addReq.send(payload);
+  event.preventDefault();
+});
 
 /*****************************************************************************
 3. DELETE
