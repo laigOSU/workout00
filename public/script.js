@@ -128,7 +128,7 @@ function generate_table(loadedJSON){
       //https://stackoverflow.com/questions/31275357/using-substring-of-json-key-value-for-conditionals
       //https://www.w3schools.com/jsref/jsref_substring.asp
       //https://piazza.com/class/jbu2ol8jlbl3iu?cid=285
-      add_date.innerText = item["date"].substring(0, 10); //because item["date"] is string
+      add_date.innerText = item["date"].substring(0); //because item["date"] is string
       add_row.appendChild(add_date);
 
       add_name.innerText = item["name"].substring(0);  //because item["name"] is string
