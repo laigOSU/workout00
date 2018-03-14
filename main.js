@@ -62,13 +62,24 @@ app.post('/insert',function(req, res){
         return;
       }
 
-      context.results = JSON.stringify(result);
-      console.log("What I got from /insert: ",context);
-      res.type('application/json');
-      res.send(result);
-    }
-)
-})
+    // mysql.pool.query('SELECT * FROM workouts', function(err, rows, fields){
+    //     if (err){
+    //       next(err);
+    //       return;
+    //     }
+    //     console.log("What I got from /insert: ", context);
+    //     res.type('application/json');
+    //     res.send(rows);
+    // });
+
+    context.results = JSON.stringify(result);
+    console.log("What I got from /insert: ",context);
+    res.type('application/json');
+    res.send(result);
+
+  });
+});
+
 
 
 
