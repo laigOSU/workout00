@@ -47,7 +47,6 @@ app.get('/display',function(req,res){
     res.type('application/json')
     res.send(rows);
   })
-  console.log("finished display");
 });
 
 /*****************************************************************************
