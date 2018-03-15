@@ -193,7 +193,7 @@ function generate_table(loadedJSON){
       add_row.appendChild(add_delete);
 
       //NEED TO APPEND!!
-      table.appendChild(add_row);
+      table.appendChild(add_row); //Keep this here, otherwise table doesn't display
   })
 
   /* EVENT LISTENER - UPDATE BUTTONS */
@@ -267,6 +267,35 @@ addButton.addEventListener('click', function(event){  //I don't think I need an 
   addReq.send(JSON.stringify(payload));
   // addReq.send(payload);
   event.preventDefault();
+
+  //Get form id
+  var addWorkout = document.getElementById("addWorkoutForm");
+
+  //Create a request in order to add the element to the server
+  var ourRequest = new XMLHttpRequest();
+
+  //GET request to /display route
+  ourRequest.open('GET', '/display', true);
+
+  //Do something with the data when it gets loaded.
+  //Alternatively can do: ourRequest.addEventListener("load", function(){});
+  ourRequest.onload = function(){ // ourRequest.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    //A. If the data from server loads properly, then do something with it.
+    if(ourRequest.status >= 200 && ourRequest.status < 400){
+      var ourData = JSON.parse(ourRequest.responseText); //Parse the loaded JSON data
+      console.log(ourData); //Display the objects to client console
+
+      //Dynamically create a table to display the loaded ourData (f'n definition below)
+      generate_table(ourData);
+    }
+    //B. If data fails to load from the server, print error message.
+    else{
+      console.log("Error in network request: " + ourRequest.statusText);
+    }
+  };
+
+  //don't put this here before ourRequest.send(): console.log(ourData);
+  ourRequest.send();
 });
 
 /*****************************************************************************
@@ -343,18 +372,22 @@ function updateFunction(event){
   //[4] = Unit
   //https://stackoverflow.com/questions/118693/how-do-you-dynamically-create-a-radio-button-in-javascript-that-works-in-all-bro
   // https://stackoverflow.com/questions/32292962/javascript-how-to-change-radio-button-label-text
+  //https://www.w3schools.com/html/html_form_elements.asp
   var update_unit = document.createElement("div");
   update_unit.setAttribute("id", "update_unit");
+
 
   var update_unit_lbs = document.createElement("input");
   update_unit_lbs.setAttribute("id", "update_lbs_true");
   update_unit_lbs.setAttribute("type", "radio");
   update_unit_lbs.setAttribute("value", 1);
 
+
   var update_unit_kg =  document.createElement("input");
   update_unit_kg.setAttribute("id","update_lbs_false");
   update_unit_kg.setAttribute("type","radio");
   update_unit_kg.setAttribute("value", 0);
+
 
   update_unit.appendChild(update_unit_lbs);
   update_unit.appendChild(update_unit_kg);
@@ -383,7 +416,7 @@ function updateFunction(event){
   //[6] = Delete (ignore this)
 
   //sendUpdateFunction definition below
-  update_send.addEventListener("click", sendUpdateFunction, false );
+  update_send.addEventListener("click", sendUpdateFunction(event), false );
   event.preventDefault();
 }
 
