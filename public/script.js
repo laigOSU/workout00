@@ -1,4 +1,3 @@
-
 /*****************************************************************************
 0. THE ADD (INSERT) BUTTON
 *****************************************************************************/
@@ -247,21 +246,21 @@ addButton.addEventListener('click', function(event){  //I don't think I need an 
   addReq.open('POST', '/insert', true);
   addReq.setRequestHeader('Content-Type', 'application/json');
 
-  addReq.onload = function(){
-     //A. If the data from server loads properly, then do something with it.
-     if(ourRequest.status >= 200 && ourRequest.status < 400){
-       var addedData = JSON.parse(ourRequest.responseText);
-       //Dynamically create a table to display the loaded addedData
-       generate_table(addedData);
-
-
-     }
-    //B. If data fails to load from the server, print error message.
-     else {
-       console.log("Error in network request: " + ourRequest.statusText);
-     }
-     // addReq.send(JSON.stringify(payload));
-  };
+  // addReq.onload = function(){
+  //    //A. If the data from server loads properly, then do something with it.
+  //    if(ourRequest.status >= 200 && ourRequest.status < 400){
+  //      var addedData = JSON.parse(ourRequest.responseText);
+  //      //Dynamically create a table to display the loaded addedData
+  //      generate_table(addedData);
+  // 
+  // 
+  //    }
+  //   //B. If data fails to load from the server, print error message.
+  //    else {
+  //      console.log("Error in network request: " + ourRequest.statusText);
+  //    }
+  //    // addReq.send(JSON.stringify(payload));
+  // };
 
   //req.send() here
   addReq.send(JSON.stringify(payload));
