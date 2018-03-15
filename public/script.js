@@ -72,6 +72,9 @@ function generate_table(loadedJSON){
   //Get the table (from home.handlebars)
   var table = document.getElementById("displayTable");
 
+  //Clear previous contents
+  table.innerHTML = "";
+
   //Create a header row <tr> with header cells <th>
   var head_row = document.createElement("tr");
 
