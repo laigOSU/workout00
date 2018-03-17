@@ -56,31 +56,34 @@ app.get('/display',function(req,res, next){
 app.post('/insert',function(req, res, next){
   console.log("this is /insert. I got a POST request to ADD.");
   var context = {};
-  mysql.pool.query('INSERT INTO workouts (`name`, `reps`, `weight`, `date`, `lbs`) VALUES (?,?,?,?,?)',
-    [req.body.name, req.body.reps, req.body.weight, req.body.date, req.body.lbs], function(err, rows, fields){
-      if(err){
-        next(err);
-        return;
-      }
-      // res.send(rows); //Going to try sending rows
-
-    mysql.pool.query('SELECT * FROM workouts', function(err, rows, fields){
-        if (err){
+  if(req.body.name !== ""){
+    mysql.pool.query('INSERT INTO workouts (`name`, `reps`, `weight`, `date`, `lbs`) VALUES (?,?,?,?,?)',
+      [req.body.name, req.body.reps, req.body.weight, req.body.date, req.body.lbs], function(err, rows, fields){
+        if(err){
           next(err);
           return;
         }
-        // context.results = JSON.stringify(result);
-        console.log("What I got from /insert: ", context);
-        res.type('application/json');
-        res.send(rows);
+        // res.send(rows); //Going to try sending rows
+
+      mysql.pool.query('SELECT * FROM workouts', function(err, rows, fields){
+          if (err){
+            next(err);
+            return;
+          }
+          // context.results = JSON.stringify(result);
+          console.log("What I got from /insert: ", context);
+          res.type('application/json');
+          res.send(rows);
+      });
+
+      // context.results = JSON.stringify(result);
+      // console.log("What I got from /insert: ",context);
+      // res.type('application/json');
+      // res.send(result);
+
     });
+  }
 
-    // context.results = JSON.stringify(result);
-    // console.log("What I got from /insert: ",context);
-    // res.type('application/json');
-    // res.send(result);
-
-  });
 });
 
 
