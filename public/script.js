@@ -243,6 +243,7 @@ addButton.addEventListener('click', function(event){  //I don't think I need an 
     payload.lbs = 1;
   }
 
+  //Open the xml request
   addReq.open('POST', '/insert', true);
   addReq.setRequestHeader('Content-Type', 'application/json');
 
@@ -313,8 +314,8 @@ function updateFunction(event){
   var hidden_id = this.previousSibling.value;
   console.log("hidden_id is:" +  this.previousSibling.value);
 
-
-  /*** 4A. @/home: "UPDATE" BUTTON --> GO TO UPDATE PAGE (with the given hidden_id)***/
+  /*@/home: "UPDATE" BUTTON --> GO TO UPDATE PAGE (with the given hidden_id)
+    Then from /update page, "CONFIRM UPDATE" --> will run query and redirect to /home */
 
   //https://stackoverflow.com/questions/38338144/how-can-i-make-a-button-redirect-my-page-to-another-page-using-addeventlistener
   document.location.href = '/update?id=' + hidden_id;
