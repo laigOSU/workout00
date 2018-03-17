@@ -34,7 +34,7 @@ app.get('/',function(req,res){
 /*****************************************************************************
   DISPLAY
 *****************************************************************************/
-app.get('/display',function(req,res){
+app.get('/display',function(req,res, next){
   console.log("This is /display. I got a GET request");
   var context = {};
   mysql.pool.query('SELECT * FROM workouts', function(err, rows, fields){
@@ -42,7 +42,7 @@ app.get('/display',function(req,res){
       next(err);
       return;
     }
-    context.results = JSON.stringify(rows);
+    // context.results = JSON.stringify(rows);
     console.log("Still from /display",context);
 
     res.type('application/json')
@@ -53,22 +53,23 @@ app.get('/display',function(req,res){
 /*****************************************************************************
   INSERT
 *****************************************************************************/
-app.post('/insert',function(req, res){
+app.post('/insert',function(req, res, next){
   console.log("this is /insert. I got a POST request to ADD.");
   var context = {};
   mysql.pool.query('INSERT INTO workouts (`name`, `reps`, `weight`, `date`, `lbs`) VALUES (?,?,?,?,?)',
-    [req.body.name, req.body.reps, req.body.weight, req.body.date, req.body.lbs], function(err, result){
+    [req.body.name, req.body.reps, req.body.weight, req.body.date, req.body.lbs], function(err, rows, fields){
       if(err){
         next(err);
         return;
       }
+      // res.send(rows); //Going to try sending rows
 
     mysql.pool.query('SELECT * FROM workouts', function(err, rows, fields){
         if (err){
           next(err);
           return;
         }
-        context.results = JSON.stringify(result);
+        // context.results = JSON.stringify(result);
         console.log("What I got from /insert: ", context);
         res.type('application/json');
         res.send(rows);
@@ -114,25 +115,55 @@ app.post('/delete', function(req, res){
 /*****************************************************************************
   UPDATE
 *****************************************************************************/
-app.post('/update',function(req,res,next){
-  pool.query('UPDATE workouts SET name=?, date=?, reps=?, weight=?, lbs=? WHERE id = ?',
-  [req.body.name, req.body.date, req.body.reps, req.body.weight, req.body.unit, req.body.id],
-  function(err, result){
-    if(err){
-      next(err);
-      return;
-    }
-    mysql.pool.query('SELECT * FROM workouts', function(err, rows, fields){
-        if (err){
-          next(err);
-          return;
-        }
-        context.results = JSON.stringify(result);
-        console.log("What I got from /update: ", context);
-        res.type('application/json');
-        res.send(rows);
-    });
-  });
+app.get('/update', function(req, res, next){
+  var context = {};
+  console.log("The requested QUERY for GET from /update.");
+  //Get the hidden id. Use QUERY.
+  context.id = req.query.id;
+  console.log(context);
+  res.render('update', context);
+});
+
+
+app.post("/update", function(req, res, next){
+  var context = {};
+  console.log("The requested BODY for POST from /update.");
+  //Get hidden id. Use BODY.
+  context.id = req.body.id;
+  console.log(context);
+
+  res.type('application/json');
+  res.render('update', context);
+})
+
+//Parameter would be: /safe-update?id=2&name=Jogging&reps=....
+app.get('/form-update',function(req,res,next){
+  var context = {};
+  mysql.pool.query("SELECT * FROM workouts WHERE id=?", [req.query.id], function(err, result){
+   if(err){
+     next(err);
+     return;
+   }
+   if(result.length == 1){
+     var curVals = result[0];
+
+     mysql.pool.query("UPDATE workouts SET name=?, reps=?, weight=?, date=?, lbs=? WHERE id=? ",
+       [req.query.name || curVals.name, req.query.reps || curVals.reps, req.query.weight || curVals.weight, req.query.date || curVals.date, req.query.lbs || curVals.lbs, req.query.id],
+       function(err, result){
+       if(err){
+         next(err);
+         return;
+       }
+
+   context.results = JSON.stringify(result);
+   console.log("From /form-update: ");
+   console.log(JSON.stringify(result));
+
+      //After updating via update form, return home
+       res.render('home');
+     });
+   }
+ });
 });
 
 

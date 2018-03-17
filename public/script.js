@@ -309,52 +309,16 @@ function deleteFunction(event){
 4. UPDATE
 *****************************************************************************/
 function updateFunction(event){
+  console.log("THIS WAS THE UPDATE BUTTON");
   var hidden_id = this.previousSibling.value;
   console.log("hidden_id is:" +  this.previousSibling.value);
 
-  //Go to update page with given hidden_id
+
+  /*** 4A. @/home: "UPDATE" BUTTON --> GO TO UPDATE PAGE (with the given hidden_id)***/
+
   //https://stackoverflow.com/questions/38338144/how-can-i-make-a-button-redirect-my-page-to-another-page-using-addeventlistener
   document.location.href = '/update?id=' + hidden_id;
 
-
-  //GAL OK NOW DO SOME POST THING
-
-  // //4A. GET
-  // //clicking "UPDATE" directs you to /update handlebars
-  // var updatePayload = {"id": hidden_id};
-  //
-  // var updateRequest = new XMLHttpRequest();
-  // updateRequest.open('GET', '/update', true);
-  // updateRequest.onload = function(){
-  //   if (updateRequest.status >= 200 && updateRequest.status < 400){
-  //     Location = "/update?id=" + hidden_id;
-  //   } else {
-  //     console.log("Error in network requst: " + updateRequest.statusText);
-  //   }
-  // }
-  // updateRequest.send();
-  //
-  //
-  //
-  //
-  //
-  //
-  // //4B. POST (and return HOME)
-  // var sendUpdatePayload = {"id": hidden_id};
-  // var sendUpdateRequest = new XMLHttpRequest();
-  // sendUpdateRequest.open('POST', '/update', true);
-  // sendUpdateRequest.setRequestHeader('Content-Type', 'application/json');
-  // sendUpdateRequest.onload = function(){
-  //   if(sendUpdateRequest.status >= 200 && sendUpdateRequest.status < 400){
-  //     //https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Location
-  //     //https://www.w3schools.com/jsref/obj_location.asp
-  //     Location = "/update?id=" + hidden_id;
-  //   } else {
-  //     console.log("Error in network request: " + sendUpdateRequest.statusText);
-  //   }
-  // }
-  // sendUpdateRequest.send();
-  // event.preventDefault();
 }
 
 

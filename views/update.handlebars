@@ -1,0 +1,24 @@
+<!-- **************************************************************************
+  UPDATE PAGE
+*************************************************************************** -->
+<h1>UPDATE WORKOUT</h1>
+
+<!-- **************************************************************************
+  UPDATE
+*************************************************************************** -->
+<form action="/form-update?" method="get">
+  <input type="hidden" name="id" value="{{this.id}}"><br>
+  Name of Exericse:
+    <br><input type="text" name="name" id="name"><br>
+  Number of Reps:
+    <br><input type="text" name="reps" id="reps"><br>
+  Weight:
+    <br><input type="text" name="weight" id="weight"><br>
+  Date:
+    <br><input type="text" name="date" id="date" placeholder="YYYY-MM-DD"><br>
+  Unit:
+    <br><input id="add_lbs_true" type="radio" name="lbs" value="1" checked>lbs
+        <input id="add_lbs_false" type="radio" name="lbs" value="0">kg<br>
+    <br>
+  <input type="submit" id="confirm_update_button" value="CONFIRM UPDATE">
+</form>
