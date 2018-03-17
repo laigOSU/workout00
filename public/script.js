@@ -195,18 +195,19 @@ function generate_table(loadedJSON){
       table.appendChild(add_row); //Keep this here, otherwise table doesn't display
   })
 
-  /* EVENT LISTENER - UPDATE BUTTONS */
+  /* EVENT LISTENER - UPDATE BUTTONS */ //Button: "UPDATE"
   var button_update = document.getElementsByClassName("update");
   //Go through however many update buttons we have
+  //https://stackoverflow.com/questions/38338144/how-can-i-make-a-button-redirect-my-page-to-another-page-using-addeventlistener
   for (var i = 0; i < button_update.length; i++ ){
-  button_update[i].addEventListener('click', updateFunction, false);
+  button_update[i].addEventListener('click', updateFunction);
   }
 
   /* EVENT LISTENER - DELETE BUTTONS */
   var button_delete = document.getElementsByClassName("delete");
   //Go through however many delete buttons we have
   for (var i = 0; i < button_delete.length; i++ ){
-  button_delete[i].addEventListener('click', deleteFunction, false);
+  button_delete[i].addEventListener('click', deleteFunction);
   }
 }
 
@@ -242,25 +243,8 @@ addButton.addEventListener('click', function(event){  //I don't think I need an 
     payload.lbs = 1;
   }
 
-  //I might need to setRequestHeader
   addReq.open('POST', '/insert', true);
   addReq.setRequestHeader('Content-Type', 'application/json');
-
-  // addReq.onload = function(){
-  //    //A. If the data from server loads properly, then do something with it.
-  //    if(ourRequest.status >= 200 && ourRequest.status < 400){
-  //      var addedData = JSON.parse(ourRequest.responseText);
-  //      //Dynamically create a table to display the loaded addedData
-  //      generate_table(addedData);
-  // 
-  // 
-  //    }
-  //   //B. If data fails to load from the server, print error message.
-  //    else {
-  //      console.log("Error in network request: " + ourRequest.statusText);
-  //    }
-  //    // addReq.send(JSON.stringify(payload));
-  // };
 
   //req.send() here
   addReq.send(JSON.stringify(payload));
@@ -306,152 +290,72 @@ function deleteFunction(event){
   var hidden_id = this.previousSibling.value;
   var payload = {"id": hidden_id};
 
-    var deleteRequest = new XMLHttpRequest();
-    deleteRequest.open('POST', '/delete', true);
-    deleteRequest.setRequestHeader("Content-Type", "application/json");
-    deleteRequest.onload = function(){
-      if(deleteRequest.status >= 200 && deleteRequest.status < 400){
-        var deleteData = JSON.parse(deleteRequest.responseText);
-        generate_table(deleteData);
-      } else {
-        console.log("Error in network request: " + deleteData.statusText)
-      }
+  var deleteRequest = new XMLHttpRequest();
+  deleteRequest.open('POST', '/delete', true);
+  deleteRequest.setRequestHeader("Content-Type", "application/json");
+  deleteRequest.onload = function(){
+    if(deleteRequest.status >= 200 && deleteRequest.status < 400){
+      var deleteData = JSON.parse(deleteRequest.responseText);
+      generate_table(deleteData);
+    } else {
+      console.log("Error in network request: " + deleteData.statusText)
     }
-    deleteRequest.send(JSON.stringify(payload));
-    event.preventDefault();
-
-
-
+  }
+  deleteRequest.send(JSON.stringify(payload));
+  event.preventDefault();
 }
 
 /*****************************************************************************
 4. UPDATE
 *****************************************************************************/
 function updateFunction(event){
+  var hidden_id = this.previousSibling.value;
   console.log("hidden_id is:" +  this.previousSibling.value);
-  var hidden_id = this.previousSibling.value;
-  var payload = {"id": hidden_id};
 
-  /* CURRENT DISPLAY --> CONVERT TO INPUT TEXT FIELDS */
-  //Select the row for updating
-  var update_row = this.parentElement.parentElement.parentElement; //update_button, form, td, tr
-
-  //[0] = Date from displayTable above
-  var update_date = document.createElement("input");
-  update_date.setAttribute("value", update_row.children[0].innerText);
-  update_date.setAttribute("type", "date");
-  update_date.setAttribute ("id", "update_date");
-  update_row.children[0].innerText = ""; //Clear previous field
-  update_row.children[0].appendChild(update_date);
-
-  //[1] = Exercise
-  var update_exercise = document.createElement("input");
-  update_exercise.setAttribute("value", update_row.children[1].innerText);
-  update_exercise.setAttribute("type", "text");
-  update_exercise.setAttribute ("id", "update_exercise");
-  update_row.children[1].innerText = ""; //clear previous field
-  update_row.children[1].appendChild(update_exercise);
-
-  //[2] = Reps
-  var update_reps = document.createElement("input");
-  update_reps.setAttribute("value",update_row.children[2].innerText);
-  update_reps.setAttribute("type", "number");
-  update_reps.setAttribute("id","update_reps");
-  update_row.children[2].innerText = ""; //clear previous field
-  update_row.children[2].appendChild(update_reps);
-
-  //[3] = Weight
-  var update_weight = document.createElement("input");
-  update_weight.setAttribute("value",update_row.children[3].innerText);
-  update_weight.setAttribute("type", "number");
-  update_weight.setAttribute("id","update_weight");
-  update_row.children[3].innerText = ""; //clear previous field
-  update_row.children[3].appendChild(update_weight);
-
-  //[4] = Unit
-  //https://stackoverflow.com/questions/118693/how-do-you-dynamically-create-a-radio-button-in-javascript-that-works-in-all-bro
-  // https://stackoverflow.com/questions/32292962/javascript-how-to-change-radio-button-label-text
-  //https://www.w3schools.com/html/html_form_elements.asp
-  var update_unit = document.createElement("div");
-  update_unit.setAttribute("id", "update_unit");
+  //Go to update page with given hidden_id
+  //https://stackoverflow.com/questions/38338144/how-can-i-make-a-button-redirect-my-page-to-another-page-using-addeventlistener
+  document.location.href = '/update?id=' + hidden_id;
 
 
-  var update_unit_lbs = document.createElement("input");
-  update_unit_lbs.setAttribute("id", "update_lbs_true");
-  update_unit_lbs.setAttribute("type", "radio");
-  update_unit_lbs.setAttribute("value", 1);
+  //GAL OK NOW DO SOME POST THING
 
-
-  var update_unit_kg =  document.createElement("input");
-  update_unit_kg.setAttribute("id","update_lbs_false");
-  update_unit_kg.setAttribute("type","radio");
-  update_unit_kg.setAttribute("value", 0);
-
-
-  update_unit.appendChild(update_unit_lbs);
-  update_unit.appendChild(update_unit_kg);
-  update_row.children[4].innerText = ""; //clear previous
-  update_row.children[4].appendChild(update_unit);
-
-  var update_label_lbs = document.getElementById("update_lbs_true");
-  update_label_lbs.innerHTML = "lbs";
-  var update_label_kg = document.getElementById("update_lbs_false");
-  update_label_kg.innerHTML = "kg";
-
-  //[5] = Update
-  update_row.children[5].innerHTML = "";
-  var form = document.createElement("form");
-  var update_id = document.createElement("input");
-  update_id.setAttribute("type", "hidden");
-  update_id.setAttribute("value", hidden_id);
-  var update_send = document.createElement("input");
-  update_send.setAttribute("type", "button");
-  update_send.setAttribute("value", "CONFIRM UPDATE");
-
-  form.appendChild(update_send);
-  form.appendChild(update_id);
-  update_row.children[5].appendChild(form);
-
-  //[6] = Delete (ignore this)
-
-  //sendUpdateFunction definition below
-  update_send.addEventListener("click", sendUpdateFunction(event), false );
-  event.preventDefault();
+  // //4A. GET
+  // //clicking "UPDATE" directs you to /update handlebars
+  // var updatePayload = {"id": hidden_id};
+  //
+  // var updateRequest = new XMLHttpRequest();
+  // updateRequest.open('GET', '/update', true);
+  // updateRequest.onload = function(){
+  //   if (updateRequest.status >= 200 && updateRequest.status < 400){
+  //     Location = "/update?id=" + hidden_id;
+  //   } else {
+  //     console.log("Error in network requst: " + updateRequest.statusText);
+  //   }
+  // }
+  // updateRequest.send();
+  //
+  //
+  //
+  //
+  //
+  //
+  // //4B. POST (and return HOME)
+  // var sendUpdatePayload = {"id": hidden_id};
+  // var sendUpdateRequest = new XMLHttpRequest();
+  // sendUpdateRequest.open('POST', '/update', true);
+  // sendUpdateRequest.setRequestHeader('Content-Type', 'application/json');
+  // sendUpdateRequest.onload = function(){
+  //   if(sendUpdateRequest.status >= 200 && sendUpdateRequest.status < 400){
+  //     //https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Location
+  //     //https://www.w3schools.com/jsref/obj_location.asp
+  //     Location = "/update?id=" + hidden_id;
+  //   } else {
+  //     console.log("Error in network request: " + sendUpdateRequest.statusText);
+  //   }
+  // }
+  // sendUpdateRequest.send();
+  // event.preventDefault();
 }
-
-/* NOW SEND THE UPDATED DATA VIA POST */
-function sendUpdateFunction(event){
-  var hidden_id = this.previousSibling.value;
-  var sendUpdateReq = new XMLHttpRequest();
-  var payload = { id: hidden_id,
-                  date: null,
-                  name: null,
-                  reps: null,
-                  weight: null,
-                  lbs: null};
-    // payload.id = hidden_id;
-    payload.date = document.getElementById("update_date").value;
-    payload.name = document.getElementById("update_exercise").value;
-    payload.reps = document.getElementById("update_reps").value;
-    payload.weight = document.getElementById("update_weight").value;
-    payload.lbgs = document.getElementById("update_unit").value;
-
-  sendUpdateReq.open('POST', '/update', true);
-  sendUpdateReq.setRequestHeader("Content-Type", "application/json");
-
-  sendUpdateReq.onload = function(){
-    if(sendUpdateReq.status >= 200 && sendUpdateReq.status < 400){
-      var sendUpdateData = JSON.parse(sendUpdateReq.responseText);
-      generate_table(sendUpdateData);
-    } else {
-      console.log("Error in network request: " + sendUpdateReq.statusText);
-    }
-  };
-
-  sendUpdateReq.send(JSON.stringify(payload));
-  event.preventDefault();
-}
-
 
 
 
